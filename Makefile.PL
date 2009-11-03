@@ -1,4 +1,8 @@
 
+require 5.006_002;
+use strict;
+use warnings;
+use Carp;
 
 use ExtUtils::MakeMaker;
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
@@ -16,6 +20,7 @@ WriteMakefile(
 
                      # list of unknown modules used:
                     },
+    LICENSE      => 'perl', 
 );
 
 __END__

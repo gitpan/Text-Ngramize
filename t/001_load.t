@@ -208,7 +208,7 @@ sub getRandomWord # ($MaxCharactersInWord, $Type)
     {
       no warnings;
       $chr = chr $ord;
-      $doNext = 1 if ($chr =~ /^\P{Alphabetic}$/);
+      $doNext = 1 if ($chr =~ /^\P{IsAlphabetic}$/);
     };
     next if ($doNext || $@);
     next unless length ($chr);
@@ -233,7 +233,7 @@ sub getRandomSentence # ($MaxWordsInSentence, $StartingPosition)
   my @punctuation;
   foreach my $item (',', '#', '*', '_', '-', '+', '=', ';'. ':')
   {
-    push @punctuation, $item if ($item =~ /^\P{Alphabetic}$/);
+    push @punctuation, $item if ($item =~ /^\P{IsAlphabetic}$/);
   }
 
   my @words;

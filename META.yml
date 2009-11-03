@@ -1,10 +1,10 @@
 --- #YAML:1.0
 name:               Text-Ngramize
-version:            1.0
+version:            1.01
 abstract:           Computes lists of n-grams of text.
 author:
     - Jeff Kubina (jeff.kubina@gmail.com)
-license:            unknown
+license:            perl
 distribution_type:  module
 configure_requires:
     ExtUtils::MakeMaker:  0

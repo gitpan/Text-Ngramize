@@ -1,4 +1,6 @@
 package Text::Ngramize;
+
+require 5.006_002;
 use strict;
 use warnings;
 use integer;
@@ -7,7 +9,7 @@ use Carp;
 BEGIN {
     use Exporter ();
     use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
-    $VERSION     = '1.0';
+    $VERSION     = '1.01';
     @ISA         = qw(Exporter);
     @EXPORT      = qw();
     @EXPORT_OK   = qw();
@@ -691,7 +693,7 @@ sub getListOfCharacters # ($text)
 sub getListOfWords # ($text)
 {
   my $Self = shift;
-  return $Self->getListOfTokensUsingRegexp ('[^\p{Alphabetic}]+', @_);
+  return $Self->getListOfTokensUsingRegexp ('[^\p{IsAlphabetic}]+', @_);
 }
 
 # regexp must be a regexp without bounding slashes.
@@ -736,9 +738,9 @@ sub normalizeText # ($text)
     $Text = lc $$Text;
   }
 
-  # convert all none letters to spaces; tried to use tr/// but \p{Alphabetic} gave a
+  # convert all none letters to spaces; tried to use tr/// but \p{IsAlphabetic} gave a
   # warning with it.
-  $Text =~ s/\P{Alphabetic}/ /g;
+  $Text =~ s/\P{IsAlphabetic}/ /g;
 
   # compress mulitple spaces to one space.
   $Text =~ s/  +/ /g;
@@ -825,7 +827,7 @@ sub normalizeCharacterList
 
     # lowercase the character or convert it to a space.
     my $newChar;
-    if ($charPos->[0] =~ m/^\p{Alphabetic}$/)
+    if ($charPos->[0] =~ m/^\p{IsAlphabetic}$/)
     {
       $newChar = lc $charPos->[0];
     }
@@ -1030,7 +1032,7 @@ sub getListOfWordsFromCharacterList # ($ListOfCharactersWithPositions)
     # get the pair [character, position, length].
     my $charPosLen = $ListOfCharacters->[$i];
 
-    if ($charPosLen->[0] =~ m/^\p{Alphabetic}$/)
+    if ($charPosLen->[0] =~ m/^\p{IsAlphabetic}$/)
     {
       # got a letter so accumulate the letters of the word.
       push @currentWord, $charPosLen;
@@ -1205,9 +1207,19 @@ it and/or modify it under the same terms as Perl itself.
 The full text of the license can be found in the
 LICENSE file included with this module.
 
+=head1 KEYWORDS
+
+data mining, ngram, ngrams, n-gram, n-grams, string processing, text processing 
+
 =head1 SEE ALSO
 
-L<perlunicode>, L<split>, L<unpack>, L<utf8>
+L<Encode>, L<perlunicode>, L<utf8>
+
+=begin html
+
+<a href="http://en.wikipedia.org/wiki/N-gram">n-gram</a>, <a href="http://perldoc.perl.org/functions/split.html">split</a>, <a href="http://perldoc.perl.org/functions/unpack.html">unpack</a>
+
+=end html
 
 =cut
 
