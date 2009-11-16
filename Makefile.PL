@@ -1,5 +1,5 @@
 
-require 5.006_002;
+require 5.008_000;
 use strict;
 use warnings;
 use Carp;
@@ -28,16 +28,18 @@ __END__
     PREREQ_PM    => {
                      # list of core modules used:
                      'bytes' => '1.03',
-                     'Carp' => '1.08',
-                     'Encode' => '2.33',
+                     'Carp' => '1.11',
+                     'Encode' => '2.37',
+                     'integer' => '1.00',
                      'strict' => '1.04',
-                     'Test::More' => '0.88',
+                     'Test::More' => '0.94',
                      'vars' => '1.01',
                      'warnings' => '1.06',
 
                      # list of installed modules used:
-                     'Data::Dump' => '1.14',
-                     'Text::Ngramize' => '1.0',
+                     'Data::Dump' => '1.15',
+                     'Text::Ngramize' => '1.02',
 
                      # list of unknown modules used:
+                     '5.008_000' => '0',
                     },

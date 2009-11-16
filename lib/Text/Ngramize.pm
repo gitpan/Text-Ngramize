@@ -1,6 +1,6 @@
 package Text::Ngramize;
 
-require 5.006_002;
+require 5.008_000;
 use strict;
 use warnings;
 use integer;
@@ -9,7 +9,7 @@ use Carp;
 BEGIN {
     use Exporter ();
     use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
-    $VERSION     = '1.01';
+    $VERSION     = '1.02';
     @ISA         = qw(Exporter);
     @EXPORT      = qw();
     @EXPORT_OK   = qw();
