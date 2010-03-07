@@ -20,7 +20,7 @@ WriteMakefile(
 
                      # list of unknown modules used:
                     },
-    LICENSE      => 'perl', 
+    LICENSE      => 'perl',
 );
 
 __END__
@@ -28,8 +28,8 @@ __END__
     PREREQ_PM    => {
                      # list of core modules used:
                      'bytes' => '1.03',
-                     'Carp' => '1.11',
-                     'Encode' => '2.37',
+                     'Carp' => '1.08',
+                     'Encode' => '2.39',
                      'integer' => '1.00',
                      'strict' => '1.04',
                      'Test::More' => '0.94',

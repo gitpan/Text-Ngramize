@@ -281,8 +281,7 @@ COPYRIGHT
     with this module.
 
 KEYWORDS
-    data mining, ngram, ngrams, n-gram, n-grams, string processing, text
-    processing
+    information processing, ngram, ngrams, n-gram, n-grams, string, text
 
 SEE ALSO
     Encode, perlunicode, utf8

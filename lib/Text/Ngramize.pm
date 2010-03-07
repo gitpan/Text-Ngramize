@@ -6,10 +6,14 @@ use warnings;
 use integer;
 use Carp;
 
+use constant INDEX_TOKEN => 0;
+use constant INDEX_POSITION => 1;
+use constant INDEX_LENGTH => 2;
+
 BEGIN {
     use Exporter ();
     use vars qw($VERSION @ISA @EXPORT @EXPORT_OK %EXPORT_TAGS);
-    $VERSION     = '1.02';
+    $VERSION     = '1.03';
     @ISA         = qw(Exporter);
     @EXPORT      = qw();
     @EXPORT_OK   = qw();
@@ -462,11 +466,13 @@ sub getListOfNgramHashValues
   my $indexToRemove = 0;
   my $removeShiftLeft = ($sizeOfNgrams - 1) % $bitInInteger;
   my $removeShiftRight = $bitInInteger - $removeShiftLeft;
+  my $removeShiftMask = ~(-1 << $removeShiftLeft);
+  my $addShiftMask = ~(-1 << 1);
 
   for (my $indexToAdd = $sizeOfNgrams; $indexToAdd < $totalTokens; $indexToRemove++, $indexToAdd++)
   {
-    $runningHashValue ^= ($listOfHashesOfTokens->[$indexToRemove] << $removeShiftLeft) ^ $Self->rshift($listOfHashesOfTokens->[$indexToRemove],$removeShiftRight);
-    $runningHashValue = ($runningHashValue << 1) ^ $Self->rshift($runningHashValue,$addShiftRight) ^ $listOfHashesOfTokens->[$indexToAdd];
+    $runningHashValue ^= ($listOfHashesOfTokens->[$indexToRemove] << $removeShiftLeft) ^ (($listOfHashesOfTokens->[$indexToRemove] >> $removeShiftRight) & $removeShiftMask);
+    $runningHashValue = ($runningHashValue << 1) ^ (($runningHashValue >> $addShiftRight) & $addShiftMask) ^ $listOfHashesOfTokens->[$indexToAdd];
     push @listOfHashValues, $runningHashValue;
   }
 
@@ -588,11 +594,13 @@ sub getListOfNgramHashValuesWithPositions
   my $indexToRemove = 0;
   my $removeShiftLeft = ($sizeOfNgrams - 1) % $bitInInteger;
   my $removeShiftRight = $bitInInteger - $removeShiftLeft;
+  my $removeShiftMask = ~(-1 << $removeShiftLeft);
+  my $addShiftMask = ~(-1 << 1);
 
   for (my $indexToAdd = $sizeOfNgrams; $indexToAdd < $totalTokens; $indexToRemove++, $indexToAdd++)
   {
-    $runningHashValue ^= ($listOfHashesOfTokens->[$indexToRemove] << $removeShiftLeft) ^ $Self->rshift($listOfHashesOfTokens->[$indexToRemove],$removeShiftRight);
-    $runningHashValue = ($runningHashValue << 1) ^ $Self->rshift($runningHashValue,$addShiftRight) ^ $listOfHashesOfTokens->[$indexToAdd];
+    $runningHashValue ^= ($listOfHashesOfTokens->[$indexToRemove] << $removeShiftLeft) ^ (($listOfHashesOfTokens->[$indexToRemove] >> $removeShiftRight) & $removeShiftMask);
+    $runningHashValue = ($runningHashValue << 1) ^ (($runningHashValue >> $addShiftRight) & $addShiftMask) ^ $listOfHashesOfTokens->[$indexToAdd];
     push @listOfHashValues, [$runningHashValue, $listOfTokens->[$indexToRemove + 1][1], $listOfTokens->[$indexToRemove + $sizeOfNgrams][1] + $listOfTokens->[$indexToRemove + $sizeOfNgrams][2] - $listOfTokens->[$indexToRemove + 1][1]];
   }
 
@@ -743,7 +751,7 @@ sub normalizeText # ($text)
   $Text =~ s/\P{IsAlphabetic}/ /g;
 
   # compress mulitple spaces to one space.
-  $Text =~ s/  +/ /g;
+  $Text =~ tr/ / /s;
 
   # remove leading spaces.
   $Text =~ s/^ +//;
@@ -820,6 +828,7 @@ sub normalizeCharacterList
 
   my @filteredList;
   my $previousCharIsSpace = 1;
+
   for (my $i = 0; $i < @$ListOfCharacters; $i++)
   {
     # get the pair [character, position].
@@ -827,7 +836,7 @@ sub normalizeCharacterList
 
     # lowercase the character or convert it to a space.
     my $newChar;
-    if ($charPos->[0] =~ m/^\p{IsAlphabetic}$/)
+    if ($charPos->[0] =~ m/^\p{IsAlphabetic}$/o)
     {
       $newChar = lc $charPos->[0];
     }
@@ -1117,6 +1126,7 @@ sub getHashValuesOfListOfStrings
 
   # get the bits to circular shift the hash values by.
   my $shiftBits = $Self->{bitsInInteger} - 1;
+  my $mask = ~(-1 << 1);
 
   # get the hash values of the bytes.
   my $byteHashValues = $Self->{byteHashValues};
@@ -1127,7 +1137,7 @@ sub getHashValuesOfListOfStrings
     my $value = 0;
     foreach my $byte (unpack ('C*', $string))
     {
-      $value = ($value << 1) ^ $Self->rshift($value,$shiftBits) ^ $byteHashValues->[$byte];
+      $value = ($value << 1) ^ (($value >> $shiftBits) & $mask) ^ $byteHashValues->[$byte];
     }
     push @listOfHashValues, $value;
   }
@@ -1209,7 +1219,7 @@ LICENSE file included with this module.
 
 =head1 KEYWORDS
 
-data mining, ngram, ngrams, n-gram, n-grams, string processing, text processing 
+information processing, ngram, ngrams, n-gram, n-grams, string, text
 
 =head1 SEE ALSO
 
